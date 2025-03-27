@@ -53,18 +53,13 @@ def log_event(bot: Bot, _accid: int, event: CoreEvent) -> None:
         bot.logger.error(event.msg)
 
 
-@cli.on(events.NewMessage(command="/help"))
-def _help(bot: Bot, accid: int, event: NewMsgEvent) -> None:
-    bot.rpc.markseen_msgs(accid, [event.msg.id])
-    send_help(bot, accid, event.msg.chat_id)
-
-
 @cli.on(events.NewMessage(command="/invite"))
 def _invite(bot: Bot, accid: int, event: NewMsgEvent) -> None:
     msg = event.msg
     if warn_dm(bot, accid, msg):
         return
 
+    bot.rpc.markseen_msgs(accid, [msg.id])
     text = bot.rpc.get_chat_securejoin_qr_code(accid, msg.chat_id)
     bot.rpc.send_msg(accid, msg.chat_id, MsgData(text=text))
 
@@ -82,9 +77,9 @@ def delete_msgs(bot, accid, event):
 
 
 def warn_dm(bot: Bot, accid: int, msg: Message) -> bool:
-    bot.rpc.markseen_msgs(accid, [msg.id])
     chat = bot.rpc.get_basic_chat_info(accid, msg.chat_id)
     if chat.chat_type == ChatType.SINGLE:
+        bot.rpc.markseen_msgs(accid, [msg.id])
         send_help(bot, accid, msg.chat_id)
         return True
     return False

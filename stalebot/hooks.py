@@ -110,6 +110,7 @@ def check_account(bot: Bot, accid: int) -> None:
     for chatid in chats:
         chat = bot.rpc.get_full_chat_by_id(accid, chatid)
         if chat.chat_type == ChatType.SINGLE or not chat.can_send:
+            bot.rpc.delete_chat(chatid)
             continue
         month = 60 * 60 * 24 * 30
         for contact in chat.contacts:

@@ -91,7 +91,6 @@ def send_help(bot: Bot, accid: int, chatid: int) -> None:
         " you can add me to groups and I will remove stale inactive users.\n\n"
         "Commands:\n\n"
         "/invite  get the group's invitation link.\n\n"
-        # "/stats  send it in a group to see the group's chatting stats."
     )
     bot.rpc.send_msg(accid, chatid, MsgData(text=text))
 

@@ -56,6 +56,13 @@ def log_event(bot: Bot, _accid: int, event: CoreEvent) -> None:
         bot.logger.error(event.msg)
 
 
+@cli.on(events.NewMessage(command="/help"))
+def _help(bot: Bot, accid: int, event: NewMsgEvent) -> None:
+    msg = event.msg
+    bot.rpc.markseen_msgs(accid, [msg.id])
+    send_help(bot, accid, msg.chat_id)
+
+
 @cli.on(events.NewMessage(command="/invite"))
 def _invite(bot: Bot, accid: int, event: NewMsgEvent) -> None:
     msg = event.msg
